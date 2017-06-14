@@ -43,7 +43,6 @@ print(paste("Max number of steps at interval:", activity[which.max(avgStepsPerIn
 ```{r, echo=TRUE}
 print(paste("Number of missing values in dataset:", sum(is.na(activity)), sep = " "))
 filled <- copy(activity)
-filled[is.na(steps), interval]
 filled[is.na(steps), steps := as.integer(avgStepsPerInterval)]
 filled[, stepsPerDay := sum(steps, na.rm = T), by = .(date)]
 qplot(stepsPerDay, data = filled, geom = "histogram", main = "Steps taken per day")
