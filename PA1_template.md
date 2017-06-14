@@ -48,7 +48,7 @@ qplot(stepsPerDay, data = activity, geom = "histogram", main = "Steps taken per 
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-80-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
 ```r
 print(paste("Mean:", activity[,mean(stepsPerDay)], sep = " "))
@@ -91,14 +91,14 @@ activity[, avgStepsPerInterval := mean(steps, na.rm = T), by = .(interval)]
 qplot(data = activity, x = interval, y = avgStepsPerInterval) + geom_line()
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-81-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 ```r
-print(paste("Max number of steps at interval:", activity[which.max(steps), interval], sep = " "))
+print(paste("Max number of steps at interval:", activity[which.max(avgStepsPerInterval), interval], sep = " "))
 ```
 
 ```
-## [1] "Max number of steps at interval: 615"
+## [1] "Max number of steps at interval: 835"
 ```
 
 
@@ -244,7 +244,7 @@ qplot(stepsPerDay, data = filled, geom = "histogram", main = "Steps taken per da
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-82-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 ```r
 print(paste("Mean:", filled[,mean(stepsPerDay)], sep = " "))
@@ -412,4 +412,4 @@ filled[, avgStepsPerInterval := mean(steps, na.rm = T), by = .(interval, type)]
 qplot(data = filled, x = interval, y = avgStepsPerInterval, facets = .~type) + geom_line() + facet_wrap(nrow = 2, ncol = 1, facets = ~type)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-83-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
