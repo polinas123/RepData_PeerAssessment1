@@ -35,7 +35,7 @@ print(paste("Median:", activity[,median(stepsPerDay)], sep = " "))
 ```{r, echo=TRUE}
 activity[, avgStepsPerInterval := mean(steps, na.rm = T), by = .(interval)]
 qplot(data = activity, x = interval, y = avgStepsPerInterval) + geom_line()
-print(paste("Max number of steps at interval:", activity[which.max(steps), interval], sep = " "))
+print(paste("Max number of steps at interval:", activity[which.max(avgStepsPerInterval), interval], sep = " "))
 ```
 
 
