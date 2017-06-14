@@ -7,19 +7,57 @@ output:
 
 
 ## Loading and preprocessing the data
-
+```{r, echo=TRUE}
+# check dependencies
+        if (!require(data.table)){
+                install.packages("data.table")
+                require(data.table)
+        }
+        if (!require(ggplot2)){
+                install.packages("ggplot2")
+                require(ggplot2)
+        }
+# read data from zip file
+data <- unzip(zipfile = "activity.zip")
+activity <- fread(input = data[grep(pattern = "activity.csv", x = data)]) 
+```
 
 
 ## What is mean total number of steps taken per day?
-
-
+```{r, echo=TRUE}
+activity[, stepsPerDay := sum(steps, na.rm = T), by = .(date)]
+qplot(stepsPerDay, data = activity, geom = "histogram", main = "Steps taken per day")
+print(paste("Mean:", activity[,mean(stepsPerDay)], sep = " "))
+print(paste("Median:", activity[,median(stepsPerDay)], sep = " "))
+```
 
 ## What is the average daily activity pattern?
-
+```{r, echo=TRUE}
+activity[, avgStepsPerInterval := mean(steps, na.rm = T), by = .(interval)]
+qplot(data = activity, x = interval, y = avgStepsPerInterval) + geom_line()
+print(paste("Max number of steps at interval:", activity[which.max(steps), interval], sep = " "))
+```
 
 
 ## Imputing missing values
-
-
+```{r, echo=TRUE}
+print(paste("Number of missing values in dataset:", sum(is.na(activity)), sep = " "))
+filled <- copy(activity)
+filled[is.na(steps), interval]
+filled[is.na(steps), steps := as.integer(avgStepsPerInterval)]
+filled[, stepsPerDay := sum(steps, na.rm = T), by = .(date)]
+qplot(stepsPerDay, data = filled, geom = "histogram", main = "Steps taken per day")
+print(paste("Mean:", filled[,mean(stepsPerDay)], sep = " "))
+print(paste("Median:", filled[,median(stepsPerDay)], sep = " "))
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r, echo=TRUE}
+setkey(filled, "date")
+filled[, dayOfWeek := weekdays(as.Date(date))]
+filled[dayOfWeek %in% list("Saturday", "Sunday"), type := "weekend"]
+filled[!dayOfWeek %in% list("Saturday", "Sunday"), type := "weekday"]
+filled[,type:= as.factor(type)]
+filled[, avgStepsPerInterval := mean(steps, na.rm = T), by = .(interval, type)]
+qplot(data = filled, x = interval, y = avgStepsPerInterval, facets = .~type) + geom_line() + facet_wrap(nrow = 2, ncol = 1, facets = ~type)
+```
